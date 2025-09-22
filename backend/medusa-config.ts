@@ -16,8 +16,8 @@ export default defineConfig({
     },
   },
   admin: {
-    backendUrl: "https://munchies.medusajs.app",
-    // backendUrl: "http://localhost:9000",
+    // backendUrl: "https://munchies.medusajs.app",
+    backendUrl: "http://localhost:9000",
   },
   modules: [
     {
@@ -35,25 +35,25 @@ export default defineConfig({
         },
       },
     },
-    {
-      resolve: "@medusajs/file",
-      key: Modules.FILE,
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/medusa/file-s3",
-            id: "s3",
-            options: {
-              authentication_method: "s3-iam-role",
-              file_url: process.env.S3_FILE_URL,
-              region: process.env.S3_REGION,
-              bucket: process.env.S3_BUCKET,
-              endpoint: process.env.S3_ENDPOINT,
-            },
-          },
-        ],
-      },
-    },
+    // {
+    //   resolve: "@medusajs/file",
+    //   key: Modules.FILE,
+    //   options: {
+    //     providers: [
+    //       {
+    //         resolve: "@medusajs/medusa/file-s3",
+    //         id: "s3",
+    //         options: {
+    //           authentication_method: "s3-iam-role",
+    //           file_url: process.env.S3_FILE_URL,
+    //           region: process.env.S3_REGION,
+    //           bucket: process.env.S3_BUCKET,
+    //           endpoint: process.env.S3_ENDPOINT,
+    //         },
+    //       },
+    //     ],
+    //   },
+    // },
     {
       resolve: "@medusajs/medusa/payment",
       key: Modules.PAYMENT,

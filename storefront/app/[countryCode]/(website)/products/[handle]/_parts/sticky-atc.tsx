@@ -13,9 +13,13 @@ export default function StickyAtc({
   region_id,
   ...product
 }: {region_id: string} & StoreProduct) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    setIsVisible(true); // Show after mount
+
     const handleScroll = () => {
       const footer = document.getElementById("footer");
       if (footer) {
@@ -29,6 +33,11 @@ export default function StickyAtc({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Don't render on server to avoid hydration mismatch
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <ProductVariantsProvider product={product}>

@@ -11,8 +11,11 @@ export default function BottomBorder({
   className?: string;
 }) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+
     const handleScroll = () => {
       setIsVisible(window.scrollY > 0);
     };
@@ -25,14 +28,17 @@ export default function BottomBorder({
     };
   }, []);
 
+  // Always render as not visible until mounted to prevent hydration mismatch
+  const shouldShowBorder = isMounted && isVisible;
+
   return (
     <div
       className={cx(
         className,
         "h-[1.5px] w-screen transition-all duration-300",
         {
-          "bg-accent": isVisible && !DropdownOpen,
-          "bg-background": !isVisible,
+          "bg-accent": shouldShowBorder && !DropdownOpen,
+          "bg-background": !shouldShowBorder,
           "bg-background transition-none": DropdownOpen,
         },
       )}

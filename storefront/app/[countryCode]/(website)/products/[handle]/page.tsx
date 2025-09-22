@@ -21,9 +21,10 @@ export async function generateMetadata(
 ) {
   const content = await loadProductContent((await props.params).handle);
 
-  if (!content) {
-    return notFound();
-  }
+  // Make Sanity content optional - don't fail if content is missing
+  // if (!content) {
+  //   return notFound();
+  // }
 
   const url = generateOgEndpoint({
     countryCode: (await props.params).countryCode,
@@ -55,18 +56,24 @@ export async function generateMetadata(
 
 export default async function ProductPage(props: ProductPageProps) {
   const params = await props.params;
+  console.log("ProductPage - params:", params);
+
   const region = await getRegion(params.countryCode);
+  console.log("ProductPage - region:", region?.id);
+
   if (!region) {
-    console.log("No region found");
+    console.log("No region found for country:", params.countryCode);
     return notFound();
   }
 
   const product = await getProductByHandle(params.handle, region.id);
+  console.log("ProductPage - product found:", !!product, "handle:", params.handle);
 
   const content = await loadProductContent(params.handle);
+  console.log("ProductPage - sanity content found:", !!content);
 
   if (!product) {
-    console.log("No product found");
+    console.log("No product found for handle:", params.handle);
     return notFound();
   }
   return (

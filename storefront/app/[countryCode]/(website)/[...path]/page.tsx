@@ -13,6 +13,12 @@ export type DynamicRouteProps = PageProps<"...path" | "countryCode">;
 
 export async function generateMetadata(props: DynamicRouteProps, parent: ResolvingMetadata) {
   const params = await props.params;
+
+  // Skip product pages - they have their own route handler
+  if (params.path && params.path[0] === 'products') {
+    return {};
+  }
+
   const initialData = await loadPageByPathname({params});
 
   if (!initialData) {
@@ -32,6 +38,12 @@ export async function generateMetadata(props: DynamicRouteProps, parent: Resolvi
 
 export default async function DynamicRoute(props: DynamicRouteProps) {
   const params = await props.params;
+
+  // Skip product pages - they have their own route handler
+  if (params.path && params.path[0] === 'products') {
+    return notFound();
+  }
+
   const initialData = await loadPageByPathname({params});
   if (!initialData) return notFound();
 

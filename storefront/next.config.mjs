@@ -25,9 +25,13 @@ const config = {
   rewrites() {
     return [
       {
+        source: "/",
+        destination: "/gb",
+      },
+      {
         source:
           "/:path((?!us|dk|fr|de|es|jp|gb|ca|ar|za|mx|my|au|nz|dz|br|cms|api|images|icons|favicon.ico|sections|favicon-inactive.ico).*)",
-        destination: "/us/:path*",
+        destination: "/gb/:path*",
       },
     ];
   },

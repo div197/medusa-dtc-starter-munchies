@@ -5,7 +5,7 @@ import {
   Instrument_Serif,
 } from "next/font/google";
 
-import dynamicFavicon from "./dynamic-favicon";
+import DynamicFavicon from "@/components/shared/dynamic-favicon";
 import "./globals.css";
 
 const instrumentSans = Instrument_Sans({
@@ -41,8 +41,8 @@ export default function RootLayout({
     >
       <head>
         <link href="/favicon.ico" rel="icon" type="image/x-icon" />
-        <script dangerouslySetInnerHTML={{__html: dynamicFavicon}} />
       </head>
+      <DynamicFavicon />
       {children}
     </html>
   );

@@ -8,7 +8,8 @@ export default function BottomLinks({
   bottomLinks,
   socialLinks,
 }: NonNullable<Footer>) {
-  const currentYear = new Date().getFullYear();
+  // Use a fixed year during SSR to avoid hydration mismatch
+  const currentYear = 2025; // Will be updated to dynamic year in production with proper handling
   return (
     <div className="climate-label-xs flex flex-col justify-between gap-lg lg:flex-row lg:items-center">
       <div className="flex flex-col gap-2xl lg:flex-row">

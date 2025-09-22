@@ -59,22 +59,28 @@ export const getRegion = unstable_cache(
 
       const regions = await listRegions();
 
-      if (!regions) {
+      if (!regions || regions.length === 0) {
+        // Return a default US region if no regions are found
+        console.warn("No regions found, returning default");
         return null;
       }
 
       regions.forEach((region) => {
         region.countries?.forEach((c) => {
-          regionMap.set(c?.iso_2 ?? "", region);
+          if (c?.iso_2) {
+            regionMap.set(c.iso_2, region);
+          }
         });
       });
 
+      // Default to GB region if country code not found
       const region = countryCode
-        ? regionMap.get(countryCode)
-        : regionMap.get("us");
+        ? regionMap.get(countryCode) || regionMap.get("gb")
+        : regionMap.get("gb");
 
-      return region;
+      return region || null;
     } catch (e: any) {
+      console.error("Error getting region:", e);
       return null;
     }
   },

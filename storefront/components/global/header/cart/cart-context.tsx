@@ -7,7 +7,7 @@ import type {
 } from "@medusajs/types";
 import type {Dispatch, PropsWithChildren, SetStateAction} from "react";
 
-import {addToCart, updateCartQuantity} from "@/actions/medusa/cart";
+import {updateCartQuantity} from "@/actions/medusa/cart";
 import {usePathname} from "next/navigation";
 import {
   createContext,
@@ -60,7 +60,7 @@ export function CartProvider({
     async (payload: AddToCartEventPayload) => {
       setCartOpen(true);
 
-      startTransition(async () => {
+      startTransition(() => {
         setOptimisticCart((prev) => {
           console.log({prev: cart?.items?.length});
 
@@ -113,13 +113,33 @@ export function CartProvider({
 
           return {...prev, item_total: newTotal, items: newItems} as Cart;
         });
-
-        await addToCart({
-          quantity: 1,
-          region_id: payload.regionId,
-          variantId: payload.productVariant.id,
-        });
       });
+
+      // Call API route instead of server action
+      try {
+        const response = await fetch("/api/cart/add", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quantity: 1,
+            region_id: payload.regionId,
+            variantId: payload.productVariant.id,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add to cart");
+        }
+
+        const result = await response.json();
+        console.log("Item added to cart:", result);
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        // Revert optimistic update if needed
+        setOptimisticCart(cart);
+      }
     },
     [setCartOpen, setOptimisticCart, cart],
   );

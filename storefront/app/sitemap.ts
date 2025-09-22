@@ -14,29 +14,42 @@ const sanityClient = client.withConfig({
 });
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const publicSanityRoutes =
-    await sanityClient.fetch<SITEMAP_QUERYResult | null>(
-      SITEMAP_QUERY,
-      {},
-      {
-        next: {
-          revalidate: 0,
-        },
-      },
-    );
+  // Temporarily disable Sanity sitemap fetch to fix user ID error
+  // const publicSanityRoutes =
+  //   await sanityClient.fetch<SITEMAP_QUERYResult | null>(
+  //     SITEMAP_QUERY,
+  //     {},
+  //     {
+  //       next: {
+  //         revalidate: 0,
+  //       },
+  //     },
+  //   );
 
-  return (
-    publicSanityRoutes?.map((route) => {
-      const url = route.pathname?.current
-        ? pathToAbsUrl({
-            baseUrl: config.baseUrl,
-            path: route.pathname.current,
-          }) || ""
-        : "";
-      return {
-        lastModified: route.lastModified || undefined,
-        url,
-      };
-    }) ?? []
-  );
+  // return (
+  //   publicSanityRoutes?.map((route) => {
+  //     const url = route.pathname?.current
+  //       ? pathToAbsUrl({
+  //           baseUrl: config.baseUrl,
+  //           path: route.pathname.current,
+  //         }) || ""
+  //       : "";
+  //     return {
+  //       lastModified: route.lastModified || undefined,
+  //       url,
+  //     };
+  //   }) ?? []
+  // );
+
+  // Return basic sitemap for now
+  return [
+    {
+      url: config.baseUrl,
+      lastModified: new Date(),
+    },
+    {
+      url: `${config.baseUrl}/products`,
+      lastModified: new Date(),
+    },
+  ];
 }
